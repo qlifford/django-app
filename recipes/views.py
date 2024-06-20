@@ -5,17 +5,20 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 
 # Create your views here.
-def home(request):
-    # return HttpResponse("Welcome Home")
+def home_index(request):
+    return render(request, 'home/index.html')
+
+
+def recipe_index(request):
     recipes = models.Recipe.objects.all()
     context = {
         'recipes': recipes
     }
-    return render(request, 'recipes/home.html', context)
+    return render(request, 'recipes/index.html', context)
 
 class RecipeListview(ListView):
     model = models.Recipe
-    template_name = 'recipes/home.html'
+    template_name = 'recipes/index.html'
     context_object_name = 'recipes'
 
 class RecipeDetailView(DetailView):
@@ -43,7 +46,7 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class RecipeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = models.Recipe
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('recipes')
 
     def test_func(self):
         recipe = self.get_object()
